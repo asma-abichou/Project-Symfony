@@ -28,6 +28,13 @@ class BlogController extends AbstractController
             'age'=>25
         ]);
     }
+
+    #[Route('/blog/new', name: 'blog_create')]
+    public function create(): Response
+    {
+        return $this->render('blog/create.html.twig');
+    }
+
     #[Route('/blog/{articleId}', name: 'blog_show')]
     public function show(ArticleRepository $articleRepository , $articleId): Response
     {
@@ -36,4 +43,5 @@ class BlogController extends AbstractController
             'article' => $article
         ]);
     }
+
 }
