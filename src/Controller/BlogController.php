@@ -44,9 +44,14 @@ class BlogController extends AbstractController
     }
     //Route of create new article
     #[Route('/blog/new', name: 'blog_create')]
-    public function create(Request $request ): Response
+    #[Route('/blog/{id}/edit', name: 'blog_edit')]
+    public function form(Article $article = null, Request $request ): Response
     {
-        $article = new Article();
+        if(!$article){
+            $article = new Article();
+        }
+        $article->setTitle("Title d'example")
+                ->setContent("Le contenue de l'article");
 
         $form = $this->createFormBuilder($article)
                     ->add('title')
@@ -59,7 +64,9 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
         //dd($article);
         if($form->isSubmitted() && $form->isValid()){
-            $article->setCreatedAt(new \DateTimeImmutable());
+            if(!$article->getId){
+                $article->setCreatedAt(new \DateTimeImmutable());
+            }
 
             $this->entityManager->persist($article);
             $this->entityManager->flush();
